@@ -5,6 +5,7 @@ local capabilities = base.capabilities
 
 local lspconfig = require("lspconfig")
 
+-- LSP for c++ clangd
 lspconfig.clangd.setup {
   on_attach = function(client, bufnr)
     client.server_capabilities.signatureHelpProvider = false
@@ -13,9 +14,24 @@ lspconfig.clangd.setup {
   capabilities = capabilities,
 }
 
+-- LSP for haskell
 lspconfig.hls.setup {
   on_attach = on_attach,
   on_init = on_init,
   capabilities = capabilities,
   filetypes = { 'haskell', 'lhaskell', 'cabal'},
 }
+
+-- LSP for python
+local python_servers = {
+  "pyright",
+  --"ruff_lsp",
+}
+
+for _, lsp in ipairs(python_servers) do
+  lspconfig[lsp].setup({
+    on_attach = on_attach,
+    capabilities = capabilities,
+    filetypes = {"python"},
+  })
+end
