@@ -69,11 +69,11 @@ local plugins = {
     end
   },
   {
-    "jose-elias-alvarez/null-ls.nvim",
-    event = "VeryLazy",
-    opts = function()
-      return require "custom.configs.null-ls"
-    end,
+    "nvimtools/none-ls.nvim",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    config = function()
+        return require "custom.configs.null-ls"
+    end
   },
   {
     "neovim/nvim-lspconfig",
