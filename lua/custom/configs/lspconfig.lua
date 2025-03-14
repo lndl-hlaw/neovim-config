@@ -1,5 +1,6 @@
 local base = require("plugins.configs.lspconfig")
 local on_attach = base.on_attach
+local on_init = base.on_init
 local capabilities = base.capabilities
 
 local lspconfig = require("lspconfig")
@@ -10,4 +11,11 @@ lspconfig.clangd.setup {
     on_attach(client, bufnr)
   end,
   capabilities = capabilities,
+}
+
+lspconfig.hls.setup {
+  on_attach = on_attach,
+  on_init = on_init,
+  capabilities = capabilities,
+  filetypes = { 'haskell', 'lhaskell', 'cabal'},
 }
