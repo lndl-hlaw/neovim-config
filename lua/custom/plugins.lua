@@ -88,9 +88,18 @@ local plugins = {
       ensure_installed = {
         "clangd",
         "clang-format",
-        "codelldb"
+        "codelldb",
+        "haskell-language-server"
       }
     }
+  },
+  {
+    "nvim-treesitter/nvim-treesitter",
+    opts = {
+      ensure_installed = {
+        "haskell"
+      },
+    },
   },
   {
     "nvimdev/dashboard-nvim",
