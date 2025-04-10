@@ -5,7 +5,7 @@ local custom_init_path = vim.api.nvim_get_runtime_file("lua/custom/init.lua", fa
 
 -- The venv must be created
 -- like that -- python3 -m venv ~/.venvs/nvim
--- To check if it is configured properly in neovim
+-- To verify if it is configured properly in neovim
 -- run this -- :echo g:python3_host_prog
 vim.g.python3_host_prog = vim.fn.expand("~/.venvs/nvim/bin/python")
 
