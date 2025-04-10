@@ -2,7 +2,15 @@ require "core"
 
 local custom_init_path = vim.api.nvim_get_runtime_file("lua/custom/init.lua", false)[1]
 
--- vim.lsp.inlay_hint.enable(true)
+
+-- The venv must be created
+-- like that -- python3 -m venv ~/.venvs/nvim
+-- To check if it is configured properly in neovim
+-- run this -- :echo g:python3_host_prog
+vim.g.python3_host_prog = vim.fn.expand("~/.venvs/nvim/bin/python")
+
+-- vim.lsp.inlay_hint.enable(true) -- this may be commented in some cases
+vim.lsp.inlay_hint.enable(true)
 
 if custom_init_path then
   dofile(custom_init_path)
