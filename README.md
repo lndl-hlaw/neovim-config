@@ -25,4 +25,16 @@ To verify if it is correctly installed, run in vim:
 ### Haskell
 
 #### Packages
-- *hls* - Haskell LSP server
+- `hls` - Haskell LSP server
+
+### TeX
+
+#### Dependencies
+- `latexmk` - may be installed via `sudo apt install latexmk`
+- `TeX` packages, which may be instaled via `sudo apt install texlive-full`.
+- [texpresso](https://github.com/let-def/texpresso)
+- [texpresso.vim](https://github.com/let-def/texpresso.vim)
+
+#### Packages
+- `lervag/vimtex` - general TeX support extension. Provides comiling, linting etc.
+- `let-def/texpresso.vim` - live TeX rendering in external window.
