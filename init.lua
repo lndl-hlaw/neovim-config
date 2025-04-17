@@ -12,6 +12,9 @@ vim.g.python3_host_prog = vim.fn.expand("~/.venvs/nvim/bin/python")
 -- vim.lsp.inlay_hint.enable(true) -- this may be commented in some cases
 vim.lsp.inlay_hint.enable(true)
 
+vim.opt.number = true         -- Show absolute number on the current line
+vim.opt.relativenumber = true -- Show relative numbers on other lines
+
 if custom_init_path then
   dofile(custom_init_path)
 end
