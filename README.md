@@ -1,7 +1,8 @@
 My neovim configuration.
 
-### Global
-
+### General usage plugins 
+    - *LuaSnip* - general snippets functionality
+    - *friendly-snippets* - set of predefined and comonly used snippets
 #### Useful mappings
 
 ### C++
