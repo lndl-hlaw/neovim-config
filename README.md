@@ -1,21 +1,21 @@
 My neovim configuration.
 
 ### General usage plugins 
-    - *LuaSnip* - general snippets functionality
-    - *friendly-snippets* - set of predefined and comonly used snippets
+  - *LuaSnip* - general snippets functionality
+  - *friendly-snippets* - set of predefined and comonly used snippets
 #### Useful mappings
 
 ### C++
 
 #### Packages
-- `clangd` - C++ LSP server
+  - `clangd` - C++ LSP server
 ### Python
 
 #### Packages
-- `pyright` - Python LSP server
+  - `pyright` - Python LSP server
 #### Virtual Environment
 The python configuration requires virtual environment for python's packages. The editor is configured to use a `venv` created as follows:
-```
+```python
 python3 -m venv ~/.venvs/nvim
 ```
 To verify if it is correctly installed, run in vim:
@@ -25,4 +25,4 @@ To verify if it is correctly installed, run in vim:
 ### Haskell
 
 #### Packages
-- `hls` - Haskell LSP server
+- *hls* - Haskell LSP server
