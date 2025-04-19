@@ -121,76 +121,6 @@ local plugins = {
     },
   },
   {
-    "nvimdev/dashboard-nvim",
-    event = "VimEnter",
-    opts = function()
-      local logo = [[
-                                                                             
-               ████ ██████           █████      ██                     
-              ███████████             █████                             
-              █████████ ███████████████████ ███   ███████████   
-             █████████  ███    █████████████ █████ ██████████████   
-            █████████ ██████████ █████████ █████ █████ ████ █████   
-          ███████████ ███    ███ █████████ █████ █████ ████ █████  
-         ██████  █████████████████████ ████ █████ █████ ████ ██████ 
-      ]]
-
-      logo = string.rep("\n", 8) .. logo .. "\n\n"
-
-      local opts = {
-        theme = "doom",
-        hide = {
-          -- this is taken care of by lualine
-          -- enabling this messes up the actual laststatus setting after loading a file
-          statusline = false,
-        },
-        config = {
-          header = vim.split(logo, "\n"),
-          -- stylua: ignore
-          center = {
-            { action = "Telescope find_files", desc = " Find file", icon = " ", key = "f" },
-            { action = "ene | startinsert", desc = " New file", icon = " ", key = "n" },
-            { action = "Telescope oldfiles", desc = " Recent files", icon = " ", key = "r" },
-            { action = "Telescope live_grep", desc = " Find text", icon = " ", key = "g" },
-            {
-              action = [[lua require("lazyvim.util").telescope.config_files()()]],
-              desc = " Config",
-              icon = " ",
-              key = "c"
-            },
-            { action = 'lua require("persistence").load()', desc = " Restore Session", icon = " ", key = "s" },
-            { action = "LazyExtras", desc = " Lazy Extras", icon = " ", key = "x" },
-            { action = "Lazy", desc = " Lazy", icon = "󰒲 ", key = "l" },
-            { action = "qa", desc = " Quit", icon = " ", key = "q" },
-          },
-          footer = function()
-            local stats = require("lazy").stats()
-            local ms = (math.floor(stats.startuptime * 100 + 0.5) / 100)
-            return { "⚡ Neovim loaded " .. stats.loaded .. "/" .. stats.count .. " plugins in " .. ms .. "ms" }
-          end,
-        },
-      }
-
-      for _, button in ipairs(opts.config.center) do
-        button.desc = button.desc .. string.rep(" ", 43 - #button.desc)
-        button.key_format = "  %s"
-      end
-
-      -- close Lazy and re-open when the dashboard is ready
-      if vim.o.filetype == "lazy" then
-        vim.cmd.close()
-        vim.api.nvim_create_autocmd("User", {
-          pattern = "DashboardLoaded",
-          callback = function()
-            require("lazy").show()
-          end,
-        })
-      end
-
-      return opts
-    end,
-  },
-  {
     "rafamadriz/friendly-snippets"
   },
   {
@@ -206,6 +136,51 @@ local plugins = {
         end,
       },
     },
+  },
+  {
+    'echasnovski/mini.nvim',
+    version = false, -- or pin a version if you want
+    event = 'VimEnter',
+    config = function()
+      require("mini.ai").setup()
+      require("mini.align").setup()
+      require("mini.move").setup()
+      require("mini.basics").setup()
+      require("mini.extra").setup()
+      require("mini.files").setup()
+      require("mini.git").setup()
+      require("mini.animate").setup()
+      require("mini.colors").setup()
+      require("mini.notify").setup()
+      require("mini.statusline").setup()
+      require("mini.test").setup()
+      require('mini.starter').setup()
+      require("mini.base16").setup({
+        palette = {
+          base00 = '#112641',
+          base01 = '#3a475e',
+          base02 = '#606b81',
+          base03 = '#8691a7',
+          base04 = '#d5dc81',
+          base05 = '#e2e98f',
+          base06 = '#eff69c',
+          base07 = '#fcffaa',
+          base08 = '#ffcfa0',
+          base09 = '#cc7e46',
+          base0A = '#46a436',
+          base0B = '#9ff895',
+          base0C = '#ca6ecf',
+          base0D = '#42f7ff',
+          base0E = '#ffc4ff',
+          base0F = '#00a5c5',
+        },
+        use_cterm = true,
+        plugins = {
+          default = false,
+          ['echasnovski/mini.nvim'] = true,
+        },
+      })
+    end
   }
 }
 return plugins
