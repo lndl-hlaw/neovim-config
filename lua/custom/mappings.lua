@@ -9,6 +9,7 @@ M.dap = {
     ["<S-Down>"] = { "<cmd> m+ <CR>", "Moves one line down" },
     ["<leader>fg"] = { "<cmd> Telescope live_grep <CR>", "Live grep" },
     ["<leader>fw"] = { "<cmd> Telescope grep_string <CR>", "Find word under cursor" },
+    ["<C-b>"] = {"<cmd> lua MiniFiles.open() <CR>", "Open mini.files buffer"}
   }
 }
 

@@ -157,7 +157,6 @@ local plugins = {
       require("mini.notify").setup()
       require("mini.statusline").setup()
       require("mini.test").setup()
-      require('mini.starter').setup()
       require("mini.base16").setup({
         palette = {
           base00 = '#112641',
@@ -258,6 +257,74 @@ local plugins = {
         },
       },
     },
+  },
+  {
+    'akinsho/toggleterm.nvim',
+    version = "*",
+    event = 'VimEnter',
+    -- Full setup available here:
+    -- https://github.com/akinsho/toggleterm.nvim?tab=readme-ov-file#setup
+
+    config = function ()
+      require("toggleterm").setup {
+        size = 15 or function(term)
+          if term.direction == "horizontal" then
+            return 15
+          elseif term.direction == "vertical" then
+            return vim.o.columns * 0.4
+          end
+        end,
+        open_mapping = [[<c-\>]],
+        hide_numbers = true,
+        auto_scroll = true,
+        direction = 'float',
+        start_in_insert = true,
+        terminal_mappings = true,
+        insert_mappings = true,
+        float_opts = {
+          border = 'curved',
+          winblend = 3
+        },
+      }
+    end
+  },
+  {
+    'nvimdev/dashboard-nvim',
+    event = 'VimEnter',
+    config = function()
+      require('dashboard').setup {
+        theme = 'hyper',
+        config = {
+              week_header = {
+               enable = true,
+              },
+              shortcut = {
+                { desc = '󰊳 Update', group = '@property', action = 'Lazy update', key = 'u' },
+                {
+                  icon = ' ',
+                  icon_hl = '@variable',
+                  desc = 'Files',
+                  group = 'Label',
+                  action = 'Telescope find_files',
+                  key = 'f',
+                },
+                {
+                  desc = ' Apps',
+                  group = 'DiagnosticHint',
+                  action = 'Telescope app',
+                  key = 'a',
+                },
+                {
+                  desc = ' dotfiles',
+                  group = 'Number',
+                  action = 'Telescope dotfiles',
+                  key = 'd',
+                },
+              },
+            },
+      }
+    end,
+    dependencies = { {'nvim-tree/nvim-web-devicons'}}
   }
 }
 return plugins

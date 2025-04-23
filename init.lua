@@ -36,6 +36,9 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
+-- Simpler mapping to leave Terminal mode
+vim.keymap.set('t', '<Esc>', [[<C-\><C-n>]], { noremap = true, silent = true })
+
 dofile(vim.g.base46_cache .. "defaults")
 vim.opt.rtp:prepend(lazypath)
 require "plugins"
