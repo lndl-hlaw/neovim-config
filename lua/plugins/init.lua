@@ -233,7 +233,10 @@ local default_plugins = {
   -- Only load whichkey after all the gui
   {
     "folke/which-key.nvim",
-    keys = { "<leader>", "<c-r>", "<c-w>", '"', "'", "`", "c", "v", "g" },
+    -- The default configuration is below
+    -- keys = { "<leader>", "<c-r>", "<c-w>", '"', "'", "`", "c", "v", "g" },
+    -- I've overwritten it by deleting "v" mapping
+    keys = { "<leader>", "<c-r>", "<c-w>", '"', "'", "`", "c", "g" },
     init = function()
       require("core.utils").load_mappings "whichkey"
     end,
