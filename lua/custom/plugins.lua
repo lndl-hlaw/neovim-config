@@ -325,6 +325,10 @@ local plugins = {
       }
     end,
     dependencies = { {'nvim-tree/nvim-web-devicons'}}
+  },
+  {
+    "github/copilot.vim",
+    event = "InsertEnter",
   }
 }
 return plugins
