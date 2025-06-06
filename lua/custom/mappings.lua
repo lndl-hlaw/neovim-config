@@ -9,7 +9,9 @@ M.dap = {
     ["<S-Down>"] = { "<cmd> m+ <CR>", "Moves one line down" },
     ["<leader>fg"] = { "<cmd> Telescope live_grep <CR>", "Live grep" },
     ["<leader>fw"] = { "<cmd> Telescope grep_string <CR>", "Find word under cursor" },
-    ["<C-b>"] = {"<cmd> lua MiniFiles.open() <CR>", "Open mini.files buffer"}
+    ["<C-b>"] = {"<cmd> lua MiniFiles.open() <CR>", "Open mini.files buffer"},
+    ["<leader>ai"] = {"<cmd> CopilotChatOpen <CR>", "Open Copilot chat"},
+    ["<M-t>"] = { "<cmd> CopilotChatToggle <CR>", "Toggle Copilot chat window" },
   }
 }
 

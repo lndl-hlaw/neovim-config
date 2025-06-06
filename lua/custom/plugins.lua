@@ -1,5 +1,5 @@
 local plugins = {
-  { "nvim-telescope/telescope-fzf-native.nvim",    build = "make" },
+  { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
   { "nvim-telescope/telescope-ui-select.nvim" },
   { "debugloop/telescope-undo.nvim" },
   { "nvim-telescope/telescope-live-grep-args.nvim" },
@@ -532,6 +532,22 @@ local plugins = {
   {
     "github/copilot.vim",
     event = "InsertEnter",
+  },
+  {
+    "CopilotC-Nvim/CopilotChat.nvim",
+    dependencies = {
+      { "github/copilot.vim" }, -- or zbirenbaum/copilot.lua
+      { "nvim-lua/plenary.nvim", branch = "master" }, -- for curl, log and async functions
+    },
+    opts = {
+      -- See Configuration section for options
+      model = 'claude-3.5-sonnet',
+      layout = 'float',
+      width = 0.8,
+      height = 0.5,
+    },
+    event = 'VimEnter',
+    -- See Commands section for default commands if you want to lazy load on them
   }
 }
 return plugins
