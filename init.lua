@@ -36,8 +36,15 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
--- Simpler mapping to leave Terminal mode
 vim.keymap.set('t', '<Esc>', [[<C-\><C-n>]], { noremap = true, silent = true })
+
+vim.keymap.set('i', '<S-Tab>', 'copilot#Accept("\\<CR>")', {
+  expr = true,
+  replace_keycodes = false
+})
+vim.g.copilot_no_tab_map = true
+vim.keymap.set('i', '<S-Tab-w>', '<Plug>(copilot-accept-word)')
+vim.keymap.set('i', '<S-Tab-l>', '<Plug>(copilot-accept-line)')
 
 dofile(vim.g.base46_cache .. "defaults")
 vim.opt.rtp:prepend(lazypath)
