@@ -21,6 +21,8 @@ vim.keymap.set('n', '<leader>q', ":q<CR>")                  -- Quit the file
 
 vim.keymap.set({ 'n', 'v', 'x' }, '<leader>y', '"+y<CR>')
 vim.keymap.set({ 'n', 'v', 'x' }, '<leader>d', '"+d<CR>')
+vim.keymap.set({ 'n', 'v', 'x' }, '<leader>s', ':e #<CR>')	-- Switch to alternate file (recently opened)
+vim.keymap.set({ 'n', 'v', 'x' }, '<leader>S', ':sf #<CR>') -- The same as above, but instead of switching, it splits the screen horizontally
 
 vim.pack.add({
 	{ src = "https://github.com/vague2k/vague.nvim" },
