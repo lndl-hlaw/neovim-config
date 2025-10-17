@@ -1,52 +1,82 @@
-require "core"
+vim.o.number = true         -- Numbering lines
+vim.o.relativenumber = true -- Numbering relative to current line
+vim.o.signcolumn = "yes"
+vim.o.wrap = false          -- Visual wrapping of long lines
+vim.o.tabstop = 2           -- Length of `Tab` in spaces
+vim.o.shiftwidth = 2
+vim.o.cursorcolumn = false
+vim.o.ignorecase = true
+vim.o.smartindent = true
+vim.o.termguicolors = true
+vim.o.undofile = true
+vim.o.incsearch = true
+vim.o.swapfile = false      -- If neovim should create a swapfile
+vim.g.mapleader = " "       -- Mapping a leader
+vim.o.winborder = "rounded" -- Borders of windows like in LSP hover, see also "double" value
 
-local custom_init_path = vim.api.nvim_get_runtime_file("lua/custom/init.lua", false)[1]
+-- SYNTAX: vim.keymap.set('mode', 'shortcut', 'command')
+vim.keymap.set('n', '<leader>o', ":update<CR> :source<CR>") -- Save (if not saved) and update the file
+vim.keymap.set('n', '<leader>w', ":write<CR>")              -- Write the file
+vim.keymap.set('n', '<leader>q', ":q<CR>")                  -- Quit the file
 
+vim.keymap.set({ 'n', 'v', 'x' }, '<leader>y', '"+y<CR>')
+vim.keymap.set({ 'n', 'v', 'x' }, '<leader>d', '"+d<CR>')
 
--- The venv must be created
--- like that -- python3 -m venv ~/.venvs/nvim
--- To verify if it is configured properly in neovim
--- run this -- :echo g:python3_host_prog
-vim.g.python3_host_prog = vim.fn.expand("~/.venvs/nvim/bin/python")
-
--- vim.lsp.inlay_hint.enable(true) -- this may be commented in some cases
-vim.lsp.inlay_hint.enable(true)
-
-vim.opt.number = true         -- Show absolute number on the current line
-vim.opt.relativenumber = true -- Show relative numbers on other lines
-
-if custom_init_path then
-  dofile(custom_init_path)
-end
-
-require("core.utils").load_mappings()
-
-local lazypath = vim.fn.stdpath "data" .. "/lazy/lazy.nvim"
-
--- bootstrap lazy.nvim!
-if not vim.loop.fs_stat(lazypath) then
-  require("core.bootstrap").gen_chadrc_template()
-  require("core.bootstrap").lazy(lazypath)
-end
-
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = "markdown",
-  callback = function()
-    vim.cmd("TSBufEnable highlight")
-  end,
+vim.pack.add({
+	{ src = "https://github.com/vague2k/vague.nvim" },
+	{ src = "https://github.com/stevearc/oil.nvim" },
+	{ src = "https://github.com/echasnovski/mini.pick" },
+	{ src = "https://github.com/neovim/nvim-lspconfig" },
+	{ src = "https://github.com/nvim-treesitter/nvim-treesitter" },
+	{ src = "https://github.com/nvim-lua/plenary.nvim" },      -- Some async library for neovim lua.
+	{ src = "https://github.com/MunifTanjim/nui.nvim" },       -- This is an UI tool for nvim, higly customizable, may be used by another exts.
+	{ src = "https://github.com/nvim-tree/nvim-web-devicons" }, -- This is a pack of icons for file explorers, trees, etc.
 })
 
-vim.keymap.set('t', '<Esc>', [[<C-\><C-n>]], { noremap = true, silent = true })
-
-vim.keymap.set('i', '<S-Tab>', 'copilot#Accept("\\<CR>")', {
-  expr = true,
-  replace_keycodes = false
+require "mini.pick".setup()
+require "oil".setup()
+require "nvim-treesitter.configs".setup({
+	ensure_installed = { "python", "cpp", "rust", "haskell", "cuda", "lua" },
+	highlight = { enable = true },
+	sync_install = false,
+	auto_install = false,
+	ignore_install = {},
+	modules = {}
 })
-vim.g.copilot_no_tab_map = true
-vim.keymap.set('i', '<S-Tab-w>', '<Plug>(copilot-accept-word)')
-vim.keymap.set('i', '<S-Tab-l>', '<Plug>(copilot-accept-line)')
 
-dofile(vim.g.base46_cache .. "defaults")
-vim.opt.rtp:prepend(lazypath)
-require "plugins"
+vim.keymap.set('n', '<leader>f', ':Pick files<CR>')
+vim.keymap.set('n', '<leader>h', ':Pick help<CR>')
+vim.keymap.set('n', '<leader>e', ':Oil<CR>')
 
+-- LSP configuration:
+vim.api.nvim_create_autocmd('LspAttach', {
+	callback = function(ev)
+		local client = vim.lsp.get_client_by_id(ev.data.client_id)
+		if client:supports_method('textDocument/completion') then
+			vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
+		end
+	end,
+})
+vim.cmd("set completeopt+=noselect")
+
+-- LSP predefined bindings:
+-- K								- LSP hover
+-- Ctrl + w + d			- Diagnostic on hover
+
+local lsps = { "lua_ls", "clangd", "pyright", "hls" }
+vim.lsp.enable(lsps)
+for _, lsp in ipairs(lsps) do
+	vim.lsp.config(lsp, {
+		settings = {
+			Lua = {
+				workspace = {
+					library = vim.api.nvim_get_runtime_file("", true),
+				}
+			}
+		}
+	})
+end
+vim.keymap.set("n", "<leader>lf", vim.lsp.buf.format)
+
+vim.cmd("colorscheme vague")
+vim.cmd(":hi statusline guibg=NONE")
