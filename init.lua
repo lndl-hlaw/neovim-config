@@ -21,8 +21,10 @@ vim.keymap.set('n', '<leader>q', ":q<CR>")                  -- Quit the file
 
 vim.keymap.set({ 'n', 'v', 'x' }, '<leader>y', '"+y<CR>')
 vim.keymap.set({ 'n', 'v', 'x' }, '<leader>d', '"+d<CR>')
-vim.keymap.set({ 'n', 'v', 'x' }, '<leader>s', ':e #<CR>')  -- Switch to alternate file (recently opened)
-vim.keymap.set({ 'n', 'v', 'x' }, '<leader>S', ':sf #<CR>') -- The same as above, but instead of switching, it splits the screen horizontally
+
+-- I dont use this, since I use tabs
+-- vim.keymap.set({ 'n', 'v', 'x' }, '<leader>s', ':e #<CR>')  -- Switch to alternate file (recently opened)
+-- vim.keymap.set({ 'n', 'v', 'x' }, '<leader>S', ':sf #<CR>') -- The same as above, but instead of switching, it splits the screen horizontally
 
 vim.pack.add({
 	{ src = "https://github.com/vague2k/vague.nvim" },
@@ -39,6 +41,8 @@ vim.pack.add({
 	{ src = "https://github.com/numToStr/Comment.nvim" },       -- Commenting on 'gc'
 	{ src = "https://github.com/nvimtools/none-ls.nvim" },
 	{ src = "https://github.com/nvim-lualine/lualine.nvim" },
+	{ src = "https://github.com/folke/which-key.nvim" },
+	{ src = "https://github.com/akinsho/bufferline.nvim" },
 })
 
 require "oil".setup()
@@ -50,6 +54,8 @@ require "nvim-treesitter.configs".setup({
 	ignore_install = {},
 	modules = {}
 })
+
+require "bufferline".setup{}
 
 require "null-ls".setup({
 	require "custom.configs.null-ls"
