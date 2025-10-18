@@ -2,7 +2,7 @@ vim.o.number = true         -- Numbering lines
 vim.o.relativenumber = true -- Numbering relative to current line
 vim.o.signcolumn = "yes"
 vim.o.wrap = false          -- Visual wrapping of long lines
-vim.o.tabstop = 2           -- Length of `Tab` in spaces
+vim.o.tabstop = 4           -- Length of `Tab` in spaces
 vim.o.shiftwidth = 2
 vim.o.cursorcolumn = false
 vim.o.ignorecase = true
@@ -27,7 +27,8 @@ vim.keymap.set({ 'n', 'v', 'x' }, '<leader>d', '"+d<CR>')
 -- vim.keymap.set({ 'n', 'v', 'x' }, '<leader>S', ':sf #<CR>') -- The same as above, but instead of switching, it splits the screen horizontally
 
 vim.pack.add({
-	{ src = "https://github.com/vague2k/vague.nvim" },
+	{ src = "https://github.com/vague2k/vague.nvim" },		-- Colorscheme
+	{ src = "https://github.com/rebelot/kanagawa.nvim" },	-- Colorscheme
 	{ src = "https://github.com/stevearc/oil.nvim" },
 	{ src = "https://github.com/neovim/nvim-lspconfig" },
 	{ src = "https://github.com/nvim-treesitter/nvim-treesitter" },
@@ -43,6 +44,10 @@ vim.pack.add({
 	{ src = "https://github.com/nvim-lualine/lualine.nvim" },
 	{ src = "https://github.com/folke/which-key.nvim" },
 	{ src = "https://github.com/akinsho/bufferline.nvim" },
+	{ src = "https://github.com/hrsh7th/nvim-cmp" },
+	{ src = "https://github.com/hrsh7th/cmp-path" },
+	{ src = "https://github.com/hrsh7th/cmp-buffer" },
+	{ src = "https://github.com/hrsh7th/cmp-nvim-lsp" },
 })
 
 require "oil".setup()
@@ -60,24 +65,50 @@ require "bufferline".setup{}
 require "null-ls".setup({
 	require "custom.configs.null-ls"
 })
+
+
+local cmp = require "cmp"
+cmp.setup({
+  completion = {
+    completeopt = 'menu,menuone,noinsert'
+  },
+  sources = cmp.config.sources({
+    { name = 'nvim_lsp' },
+    { name = 'path' },
+    { name = 'buffer' },
+  }),
+  mapping = cmp.mapping.preset.insert({
+    ['<C-Space>'] = cmp.mapping.complete(),
+    ['<C-e>'] = cmp.mapping.abort(),
+    ['<CR>'] = cmp.mapping.confirm({ select = true }), -- confirm selection
+    ['<Tab>'] = cmp.mapping.select_next_item(),
+    ['<S-Tab>'] = cmp.mapping.select_prev_item(),
+  }),
+})
+
 vim.keymap.set('n', '<leader>e', ':Oil<CR>')
 
 -- LSP configuration:
-vim.api.nvim_create_autocmd('LspAttach', {
-	callback = function(ev)
-		local client = vim.lsp.get_client_by_id(ev.data.client_id)
-		if client:supports_method('textDocument/completion') then
-			vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
-		end
-	end,
-})
-vim.cmd("set completeopt+=noselect")
+
+-- For now I dont use the below, since I have cmp
+-- doing all the work, but leave it here.
+--
+-- vim.api.nvim_create_autocmd('LspAttach', {
+-- 	callback = function(ev)
+-- 		local client = vim.lsp.get_client_by_id(ev.data.client_id)
+-- 		if client:supports_method('textDocument/completion') then
+-- 			vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
+-- 		end
+-- 	end,
+-- })
+-- vim.cmd("set completeopt+=noselect")
+
 
 -- LSP predefined bindings:
 -- K								- LSP hover
 -- Ctrl + w + d			- Diagnostic on hover
 
-local lsps = { "lua_ls", "clangd", "pyright", "hls" }
+local lsps = { "lua_ls", "clangd", "pyright", "hls", "cmp_nvim_lsp" }
 vim.lsp.enable(lsps)
 for _, lsp in ipairs(lsps) do
 	vim.lsp.config(lsp, {
@@ -92,8 +123,8 @@ for _, lsp in ipairs(lsps) do
 end
 vim.keymap.set("n", "<leader>lf", vim.lsp.buf.format)
 
-vim.cmd("colorscheme vague")
-vim.cmd(":hi statusline guibg=NONE")
+vim.cmd("colorscheme kanagawa")
+-- vim.cmd(":hi statusline guibg=NONE")
 
 
 -- Telscope configuration
