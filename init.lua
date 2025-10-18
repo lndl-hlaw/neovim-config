@@ -48,6 +48,8 @@ vim.pack.add({
 	{ src = "https://github.com/hrsh7th/cmp-path" },
 	{ src = "https://github.com/hrsh7th/cmp-buffer" },
 	{ src = "https://github.com/hrsh7th/cmp-nvim-lsp" },
+	{ src = "https://github.com/MeanderingProgrammer/render-markdown.nvim" },
+	{ src = "https://github.com/L3MON4D3/LuaSnip" },
 })
 
 require "oil".setup()
@@ -108,7 +110,7 @@ vim.keymap.set('n', '<leader>e', ':Oil<CR>')
 -- K								- LSP hover
 -- Ctrl + w + d			- Diagnostic on hover
 
-local lsps = { "lua_ls", "clangd", "pyright", "hls", "cmp_nvim_lsp" }
+local lsps = { "lua_ls", "clangd", "pyright", "hls", "rust_analyzer", "glsl_analyzer", "cmp_nvim_lsp" }
 vim.lsp.enable(lsps)
 for _, lsp in ipairs(lsps) do
 	vim.lsp.config(lsp, {
