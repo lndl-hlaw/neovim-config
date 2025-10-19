@@ -17,15 +17,29 @@ mv ~/.config/nvim/ ~/.config/nvim_old/
 git clone git@github.com:lndl-hlaw/neovim-config.git ~/.config/nvim/
 ```
 - Install bob (here with `apt`, depends on your package manager):
-```
-sudo apt install bob
-```
+    - Make sure you have all the dependencies (`gcc`, `rustup`)
+    ```
+    # install gcc
+    sudo apt install gcc 
+
+    # install rustup
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh 
+    source $HOME/.cargo/env
+    ```
+    - With that install `bob`:
+    ```
+    cargo install bob-nvim
+    ```
 - Install neovim inside bob and use it. Use version hash or latest nigtly if you want:
 ```
 bob install nightly
-bob use
+bob use nightly
 ```
-- Add bob to the PATH and restart terminal.
+- Add bob to the `$PATH`.
+```
+echo 'export PATH="$HOME/.local/share/bob/nvim-bin:$PATH"' >> ~/.bashrc
+source ~/.bashrc
+```
 - Open `nvim` and install all the packages.
 
 #### Other system configuration
