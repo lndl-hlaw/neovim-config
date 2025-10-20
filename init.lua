@@ -22,6 +22,10 @@ vim.keymap.set('n', '<leader>q', ":q<CR>")                  -- Quit the file
 vim.keymap.set({ 'n', 'v', 'x' }, '<leader>y', '"+y<CR>')
 vim.keymap.set({ 'n', 'v', 'x' }, '<leader>d', '"+d<CR>')
 
+vim.keymap.set({"n", "v"}, '<Tab>', ":bnext<CR>", { silent = true, desc = "Next buffer" })
+vim.keymap.set({"n", "v"}, '<S-Tab>', ":bprev<CR>", { silent = true, desc = "Prev buffer" })
+vim.keymap.set({"n", "v"}, '<S-d>', ":bdelete<CR>", { silent = true, desc = "Delete buffer" })
+
 -- I dont use this, since I use tabs
 -- vim.keymap.set({ 'n', 'v', 'x' }, '<leader>s', ':e #<CR>')  -- Switch to alternate file (recently opened)
 -- vim.keymap.set({ 'n', 'v', 'x' }, '<leader>S', ':sf #<CR>') -- The same as above, but instead of switching, it splits the screen horizontally
