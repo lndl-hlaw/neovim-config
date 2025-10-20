@@ -33,6 +33,8 @@ vim.keymap.set({"n", "v"}, '<S-d>', ":bdelete<CR>", { silent = true, desc = "Del
 vim.pack.add({
 	{ src = "https://github.com/vague2k/vague.nvim" },		-- Colorscheme
 	{ src = "https://github.com/rebelot/kanagawa.nvim" },	-- Colorscheme
+	{ src = "https://github.com/folke/tokyonight.nvim" },	-- Colorscheme
+	{ src = "https://github.com/catppuccin/nvim" },			-- Colorscheme
 	{ src = "https://github.com/stevearc/oil.nvim" },
 	{ src = "https://github.com/neovim/nvim-lspconfig" },
 	{ src = "https://github.com/nvim-treesitter/nvim-treesitter" },
@@ -90,6 +92,12 @@ cmp.setup({
     ['<Tab>'] = cmp.mapping.select_next_item(),
     ['<S-Tab>'] = cmp.mapping.select_prev_item(),
   }),
+})
+
+require "bufferline".setup({
+  options = {
+	modified_icon = "●"
+  },
 })
 
 vim.keymap.set('n', '<leader>e', ':Oil<CR>')
