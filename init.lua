@@ -30,6 +30,7 @@ vim.keymap.set({"n", "v"}, '<S-d>', ":bdelete<CR>", { silent = true, desc = "Del
 -- vim.keymap.set({ 'n', 'v', 'x' }, '<leader>s', ':e #<CR>')  -- Switch to alternate file (recently opened)
 -- vim.keymap.set({ 'n', 'v', 'x' }, '<leader>S', ':sf #<CR>') -- The same as above, but instead of switching, it splits the screen horizontally
 
+
 vim.pack.add({
 	{ src = "https://github.com/vague2k/vague.nvim" },		-- Colorscheme
 	{ src = "https://github.com/rebelot/kanagawa.nvim" },	-- Colorscheme
@@ -56,6 +57,7 @@ vim.pack.add({
 	{ src = "https://github.com/hrsh7th/cmp-nvim-lsp" },
 	{ src = "https://github.com/MeanderingProgrammer/render-markdown.nvim" },
 	{ src = "https://github.com/L3MON4D3/LuaSnip" },
+	{ src = "https://github.com/windwp/nvim-autopairs" },
 })
 
 require "oil".setup()
@@ -72,6 +74,11 @@ require "bufferline".setup{}
 
 require "null-ls".setup({
 	require "custom.configs.null-ls"
+})
+
+require "nvim-autopairs".setup({
+  event = "InsertEnter",
+  config = true
 })
 
 

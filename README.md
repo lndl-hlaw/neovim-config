@@ -99,6 +99,7 @@ These are my custom themes:
 - [Comment](https://github.com/numToStr/Comment.nvim) - comment selection using `gc`.
 - [which-key](https://github.com/folke/which-key.nvim) - provide key hints for available bindings.
 - [LuaSnip](https://github.com/L3MON4D3/LuaSnip) - Snippets for nvim.
+- [nvim-autopairs](https://github.com/windwp/nvim-autopairs) - Complete common characters which goes in pairs.
 
 ### Bindings
 TODO ...
