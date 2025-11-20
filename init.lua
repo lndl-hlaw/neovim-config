@@ -149,7 +149,27 @@ vim.cmd("colorscheme kanagawa")
 
 
 -- Telscope configuration
+local previewers = require("telescope.previewers")
 local telescope = require("telescope")
+local commits_previewer = previewers.new_termopen_previewer({
+  get_command = function(entry)
+    local sha = entry.value
+
+    return {
+      "sh", "-c",
+      table.concat({
+        "echo '----------------------------------------------------'",
+        "echo 'Commit:      " .. sha .. "'",
+        "echo 'Author:      '$(git show -s --format=%an " .. sha .. ")",
+        "echo 'Date:        '$(git show -s --format=%ad " .. sha .. ")",
+        "echo 'Message:     '$(git show -s --format=%s " .. sha .. ")",
+        "echo '----------------------------------------------------'",
+        "echo",
+        "git show --patch " .. sha
+      }, " && ")
+    }
+  end,
+})
 telescope.setup({
 	defaults = {
 		preview = { treesitter = false },
@@ -172,7 +192,15 @@ telescope.setup({
 			prompt_position = "top",
 			preview_cutoff = 40,
 		}
-	}
+	},
+    pickers = {
+      git_bcommits = {
+		previewer=commits_previewer
+      },
+      git_commits = {
+		previewer=commits_previewer
+      },
+    },
 })
 telescope.load_extension("ui-select")
 
@@ -188,18 +216,19 @@ require("actions-preview").setup {
 local builtin = require("telescope.builtin")
 
 -- Telescope and actions-preview bindings:
-vim.keymap.set({ "n" }, "<leader>f", builtin.find_files, { desc = "Telescope live grep" })
+vim.keymap.set({ "n" }, "<leader>f", builtin.find_files, { desc = "Telescope find files" })
 vim.keymap.set({ "n" }, "<leader>g", builtin.live_grep, { desc = "Telescope live grep" })
 vim.keymap.set({ "n" }, "<leader>b", builtin.buffers, { desc = "Telescope buffers" })
 vim.keymap.set({ "n" }, "<leader>si", builtin.grep_string, { desc = "Telescope live string" })
 vim.keymap.set({ "n" }, "<leader>so", builtin.oldfiles, { desc = "Telescope buffers" })
 vim.keymap.set({ "n" }, "<leader>sh", builtin.help_tags, { desc = "Telescope help tags" })
 vim.keymap.set({ "n" }, "<leader>sm", builtin.man_pages, { desc = "Telescope man pages" })
-vim.keymap.set({ "n" }, "<leader>sr", builtin.lsp_references, { desc = "Telescope tags" })
-vim.keymap.set({ "n" }, "<leader>st", builtin.builtin, { desc = "Telescope tags" })
-vim.keymap.set({ "n" }, "<leader>sd", builtin.registers, { desc = "Telescope tags" })
-vim.keymap.set({ "n" }, "<leader>sc", builtin.git_bcommits, { desc = "Telescope tags" })
-vim.keymap.set({ "n" }, "<leader>se", "<cmd>Telescope env<cr>", { desc = "Telescope tags" })
+vim.keymap.set({ "n" }, "<leader>sr", builtin.lsp_references, { desc = "Telescope lsp_references" })
+vim.keymap.set({ "n" }, "<leader>st", builtin.builtin, { desc = "Telescope builtin" })
+vim.keymap.set({ "n" }, "<leader>sd", builtin.registers, { desc = "Telescope registers" })
+vim.keymap.set({ "n" }, "<leader>sc", builtin.git_bcommits, { desc = "Telescope git_bcommits" })
+vim.keymap.set({ "n" }, "<leader>sl", builtin.git_commits, { desc = "Telescope git_commits" })
+vim.keymap.set({ "n" }, "<leader>se", "<cmd>Telescope env<cr>", { desc = "Telescope envs" })
 vim.keymap.set({ "n" }, "<leader>sa", require("actions-preview").code_actions)
 vim.keymap.set({ "n" }, 'gr', builtin.lsp_references, { noremap = true, silent = true })
 vim.keymap.set({ "n" }, 'gd', builtin.lsp_definitions, { noremap = true, silent = true })
