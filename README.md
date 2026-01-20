@@ -54,6 +54,8 @@ sudo apt install xclip
     - `hls` - First install dependencies with `sudo apt install libicu-dev libncurses-dev libgmp-dev zlib1g-dev` then `ghcup install hls`
     - `rust_analyzer` - `rustup component add rust-analyzer` or install [binary](https://rust-analyzer.github.io/book/rust_analyzer_binary.html#rust-analyzer-binary)
     - `glsl_analyzer` - Go to [releases](https://github.com/nolanderc/glsl_analyzer/releases), download latest for your arch and unpack in `~/.local/bin/` (or somewhere within your PATH).
+- Some packages requires additional configuration:
+    - telescope - `export LESS=-R` to be able to scroll through preview in telescope's pickers.
 
 ### Current packages
 

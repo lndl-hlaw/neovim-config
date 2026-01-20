@@ -58,6 +58,7 @@ vim.pack.add({
 	{ src = "https://github.com/MeanderingProgrammer/render-markdown.nvim" },
 	{ src = "https://github.com/L3MON4D3/LuaSnip" },
 	{ src = "https://github.com/windwp/nvim-autopairs" },
+	{ src = "https://github.com/kawre/leetcode.nvim", build = ":TSUpdate html"},
 })
 
 require "oil".setup()
@@ -151,25 +152,49 @@ vim.cmd("colorscheme kanagawa")
 -- Telscope configuration
 local previewers = require("telescope.previewers")
 local telescope = require("telescope")
-local commits_previewer = previewers.new_termopen_previewer({
-  get_command = function(entry)
-    local sha = entry.value
 
-    return {
-      "sh", "-c",
-      table.concat({
-        "echo '----------------------------------------------------'",
-        "echo 'Commit:      " .. sha .. "'",
-        "echo 'Author:      '$(git show -s --format=%an " .. sha .. ")",
-        "echo 'Date:        '$(git show -s --format=%ad " .. sha .. ")",
-        "echo 'Message:     '$(git show -s --format=%s " .. sha .. ")",
-        "echo '----------------------------------------------------'",
-        "echo",
-        "git show --patch " .. sha
-      }, " && ")
-    }
-  end,
-})
+-- local function lsp_ref_previewer()
+--   return previewers.new_buffer_previewer({
+--     define_preview = function(self, entry, status)
+--       previewers.buffer_previewer_maker(entry[1], self.state.bufnr, {
+--         winid = self.state.winid,
+--       })
+--
+--       local filepath =
+--         entry.filename
+--         or entry.path
+--         or (type(entry.value) == "table" and entry.value.filename)
+--         or ""
+--
+-- 	  local rel = vim.fn.fnamemodify(filepath, ":.")
+--
+--       vim.api.nvim_buf_set_lines(self.state.bufnr, 0, 0, false, {
+--         "Path: " .. rel,
+--         string.rep("─", 60),
+--       })
+--     end,
+--   })
+-- end
+local function commits_previewer()
+  return previewers.new_termopen_previewer({
+    get_command = function(entry)
+      local sha = entry.value
+      return {
+        "sh", "-c",
+        table.concat({
+          "echo '----------------------------------------------------'",
+          "echo 'Commit:      " .. sha .. "'",
+          "echo 'Author:      '$(git show -s --format=%an " .. sha .. ")",
+          "echo 'Date:        '$(git show -s --format=%ad " .. sha .. ")",
+          "echo 'Message:     '$(git show -s --format=%s " .. sha .. ")",
+          "echo '----------------------------------------------------'",
+          "echo",
+          "git show --patch " .. sha
+        }, " && ")
+      }
+    end,
+  })
+end
 telescope.setup({
 	defaults = {
 		preview = { treesitter = false },
@@ -195,11 +220,14 @@ telescope.setup({
 	},
     pickers = {
       git_bcommits = {
-		previewer=commits_previewer
+		previewer=commits_previewer()
       },
       git_commits = {
-		previewer=commits_previewer
+		previewer=commits_previewer()
       },
+		--  lsp_references = {
+		-- previewer = lsp_ref_previewer()
+		--     },
     },
 })
 telescope.load_extension("ui-select")
@@ -250,3 +278,13 @@ require "lualine".setup {
 		}
 	}
 }
+
+require "leetcode".setup {
+  lang = "cpp",
+  storage = {
+    home = vim.fn.stdpath("data") .. "/leetcode",
+    cache = vim.fn.stdpath("cache") .. "/leetcode",
+  },
+}
+
+
