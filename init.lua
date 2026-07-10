@@ -4,6 +4,7 @@ vim.o.signcolumn = "yes"
 vim.o.wrap = false          -- Visual wrapping of long lines
 vim.o.tabstop = 4           -- Length of `Tab` in spaces
 vim.o.shiftwidth = 2
+vim.o.expandtab = true
 vim.o.cursorcolumn = false
 vim.o.ignorecase = true
 vim.o.smartindent = true
@@ -13,6 +14,15 @@ vim.o.incsearch = true
 vim.o.swapfile = false      -- If neovim should create a swapfile
 vim.g.mapleader = " "       -- Mapping a leader
 vim.o.winborder = "rounded" -- Borders of windows like in LSP hover, see also "double" value
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "cs",
+  callback = function()
+    vim.bo.tabstop = 4
+    vim.bo.shiftwidth = 4
+    vim.bo.expandtab = true
+  end,
+})
 
 -- SYNTAX: vim.keymap.set('mode', 'shortcut', 'command')
 vim.keymap.set('n', '<leader>o', ":update<CR> :source<CR>") -- Save (if not saved) and update the file
@@ -30,6 +40,9 @@ vim.keymap.set({"n", "v"}, '<S-d>', ":bdelete<CR>", { silent = true, desc = "Del
 -- vim.keymap.set({ 'n', 'v', 'x' }, '<leader>s', ':e #<CR>')  -- Switch to alternate file (recently opened)
 -- vim.keymap.set({ 'n', 'v', 'x' }, '<leader>S', ':sf #<CR>') -- The same as above, but instead of switching, it splits the screen horizontally
 
+
+-- Add bin/ directory to vim's PATH
+vim.env.PATH = vim.fn.stdpath("config") .. "/bin:" .. vim.env.PATH
 
 vim.pack.add({
 	{ src = "https://github.com/vague2k/vague.nvim" },		-- Colorscheme
@@ -82,7 +95,6 @@ require "nvim-autopairs".setup({
   config = true
 })
 
-
 local cmp = require "cmp"
 cmp.setup({
   completion = {
@@ -110,6 +122,7 @@ require "bufferline".setup({
 
 vim.keymap.set('n', '<leader>e', ':Oil<CR>')
 
+
 -- LSP configuration:
 
 -- For now I dont use the below, since I have cmp
@@ -130,7 +143,7 @@ vim.keymap.set('n', '<leader>e', ':Oil<CR>')
 -- K								- LSP hover
 -- Ctrl + w + d			- Diagnostic on hover
 
-local lsps = { "lua_ls", "clangd", "pyright", "hls", "rust_analyzer", "glsl_analyzer", "cmp_nvim_lsp" }
+local lsps = { "lua_ls", "clangd", "pyright", "hls", "rust_analyzer", "glsl_analyzer" }
 vim.lsp.enable(lsps)
 for _, lsp in ipairs(lsps) do
 	vim.lsp.config(lsp, {
@@ -143,6 +156,44 @@ for _, lsp in ipairs(lsps) do
 		}
 	})
 end
+
+
+-- BEGIN OMNISHARP
+local pid = vim.fn.getpid()
+local omnisharp_bin = "/usr/local/bin/omnisharp-roslyn/OmniSharp.dll"
+
+-- local on_attach = function(client, bufnr)
+--   vim.bo[bufnr].omnifunc = 'v:lua.vim.lsp.omnifunc'
+--
+--   local opts = { noremap = true, silent = true, buffer = bufnr }
+--   vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
+--   vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
+--   vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
+--   vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
+--   vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
+--   vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, opts)
+--   vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, opts)
+--   vim.keymap.set('n', '<space>wl', function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end, opts)
+--   vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, opts)
+--   vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, opts)
+--   vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action, opts)
+--   vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
+--   vim.keymap.set('n', '<space>f', vim.lsp.buf.format, opts)
+-- end
+
+local capabilities = require'cmp_nvim_lsp'.default_capabilities()
+
+vim.lsp.config('omnisharp', {
+    cmd = { "dotnet", omnisharp_bin, "--languageserver", "--hostPID", tostring(pid) },
+    -- on_attach = on_attach,
+    capabilities = capabilities,
+    filetypes = { 'cs', 'vb' },
+    root_markers = { '*.sln', '*.csproj', '.git' },
+})
+vim.lsp.enable('omnisharp')
+
+-- END OMNISHARP
+
 vim.keymap.set("n", "<leader>lf", vim.lsp.buf.format)
 
 vim.cmd("colorscheme kanagawa")
@@ -246,6 +297,7 @@ local builtin = require("telescope.builtin")
 -- Telescope and actions-preview bindings:
 vim.keymap.set({ "n" }, "<leader>f", builtin.find_files, { desc = "Telescope find files" })
 vim.keymap.set({ "n" }, "<leader>g", builtin.live_grep, { desc = "Telescope live grep" })
+vim.keymap.set({ "n" }, "<leader>sp", require('telescope.builtin').resume)
 vim.keymap.set({ "n" }, "<leader>b", builtin.buffers, { desc = "Telescope buffers" })
 vim.keymap.set({ "n" }, "<leader>si", builtin.grep_string, { desc = "Telescope live string" })
 vim.keymap.set({ "n" }, "<leader>so", builtin.oldfiles, { desc = "Telescope buffers" })
@@ -258,10 +310,29 @@ vim.keymap.set({ "n" }, "<leader>sc", builtin.git_bcommits, { desc = "Telescope 
 vim.keymap.set({ "n" }, "<leader>sl", builtin.git_commits, { desc = "Telescope git_commits" })
 vim.keymap.set({ "n" }, "<leader>se", "<cmd>Telescope env<cr>", { desc = "Telescope envs" })
 vim.keymap.set({ "n" }, "<leader>sa", require("actions-preview").code_actions)
-vim.keymap.set({ "n" }, 'gr', builtin.lsp_references, { noremap = true, silent = true })
-vim.keymap.set({ "n" }, 'gd', builtin.lsp_definitions, { noremap = true, silent = true })
-vim.keymap.set({ "n" }, 'gi', builtin.lsp_implementations, { noremap = true, silent = true })
-vim.keymap.set({ "n" }, 'gt', builtin.lsp_type_definitions, { noremap = true, silent = true })
+vim.keymap.set({ "n" }, 'gr', vim.lsp.buf.references, { noremap = true, silent = true })
+vim.keymap.set({ "n" }, 'gd', vim.lsp.buf.definition, { noremap = true, silent = true })
+vim.keymap.set({ "n" }, 'gD', vim.lsp.buf.declaration, { noremap = true, silent = true })
+vim.keymap.set({ "n" }, 'gi', vim.lsp.buf.implementation, { noremap = true, silent = true })
+vim.keymap.set({ "n" }, 'gt', vim.lsp.buf.type_definition, { noremap = true, silent = true })
+vim.keymap.set({ "n" }, 'K', vim.lsp.buf.hover, { noremap = true, silent = true })
+vim.keymap.set({ "n" }, '<C-k>', vim.lsp.buf.signature_help, { noremap = true, silent = true })
+vim.keymap.set({ "n" }, '<leader>F', vim.lsp.buf.format, { noremap = true, silent = true })
+
+
+  -- vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
+  -- vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
+  -- vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
+  -- vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
+  -- vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
+  -- vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, opts)
+  -- vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, opts)
+  -- vim.keymap.set('n', '<space>wl', function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end, opts)
+  -- vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, opts)
+  -- vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, opts)
+  -- vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action, opts)
+  -- vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
+  -- vim.keymap.set('n', '<space>f', vim.lsp.buf.format, opts)
 
 require "lualine".setup {
 	options = {
