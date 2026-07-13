@@ -44,6 +44,21 @@ vim.keymap.set({"n", "v"}, '<S-d>', ":bdelete<CR>", { silent = true, desc = "Del
 -- Add bin/ directory to vim's PATH
 vim.env.PATH = vim.fn.stdpath("config") .. "/bin:" .. vim.env.PATH
 
+vim.g.vimtex_view_method = "zathura" -- Or "sioyek" / "skim"
+vim.g.vimtex_compiler_method = "latexmk"
+vim.g.vimtex_complete_enabled = 1
+
+vim.g.vimtex_compiler_latexmk = {
+  continuous = 1,
+  background = 1,
+  options = {
+    -- "-sandbox",
+    "-synctex=1",
+    "-interaction=nonstopmode",
+    "-file-line-error",
+  },
+}
+
 vim.pack.add({
 	{ src = "https://github.com/vague2k/vague.nvim" },		-- Colorscheme
 	{ src = "https://github.com/rebelot/kanagawa.nvim" },	-- Colorscheme
@@ -68,16 +83,21 @@ vim.pack.add({
 	{ src = "https://github.com/hrsh7th/cmp-path" },
 	{ src = "https://github.com/hrsh7th/cmp-buffer" },
 	{ src = "https://github.com/hrsh7th/cmp-nvim-lsp" },
+    { src = "https://github.com/hrsh7th/cmp-omni" },
 	{ src = "https://github.com/MeanderingProgrammer/render-markdown.nvim" },
 	{ src = "https://github.com/L3MON4D3/LuaSnip" },
 	{ src = "https://github.com/windwp/nvim-autopairs" },
 	{ src = "https://github.com/kawre/leetcode.nvim", build = ":TSUpdate html"},
+    { src = "https://github.com/lervag/vimtex"}
 })
 
 require "oil".setup()
 require "nvim-treesitter.configs".setup({
 	ensure_installed = { "python", "cpp", "rust", "haskell", "cuda", "lua" },
-	highlight = { enable = true },
+	highlight = {
+      enable = true,
+      disable = { "latex", "tex" },
+    },
 	sync_install = false,
 	auto_install = false,
 	ignore_install = {},
@@ -101,9 +121,11 @@ cmp.setup({
     completeopt = 'menu,menuone,noinsert'
   },
   sources = cmp.config.sources({
+    { name = 'omni' },
     { name = 'nvim_lsp' },
+    { name = 'luasnip' },
     { name = 'path' },
-    { name = 'buffer' },
+    { name = 'buffer', keyword_length = 3 },
   }),
   mapping = cmp.mapping.preset.insert({
     ['<C-Space>'] = cmp.mapping.complete(),
@@ -122,6 +144,26 @@ require "bufferline".setup({
 
 vim.keymap.set('n', '<leader>e', ':Oil<CR>')
 
+-- require "vimtex".setup({
+--   lazy = false,
+--   init = function()
+--     -- Set your PDF viewer (change to 'sioyek' or 'skim' if on macOS)
+--     vim.g.vimtex_view_method = "zathura"
+--     -- Tell Vimtex to compile to PDF automatically on file save (.tex)
+--     vim.g.vimtex_compiler_method = "latexmk"
+--     -- Ensure continuous compilation is turned on
+--     vim.g.vimtex_compiler_latexmk = {
+--       continuous = 1,
+--       background = 1,
+--       options = {
+--         "-sandbox",
+--         "-synctex=1",
+--         "-interaction=nonstopmode",
+--         "-file-line-error",
+--       },
+--     }
+--   end
+-- })
 
 -- LSP configuration:
 
