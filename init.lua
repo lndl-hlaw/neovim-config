@@ -3,7 +3,7 @@ vim.o.relativenumber = true -- Numbering relative to current line
 vim.o.signcolumn = "yes"
 vim.o.wrap = false          -- Visual wrapping of long lines
 vim.o.tabstop = 4           -- Length of `Tab` in spaces
-vim.o.shiftwidth = 2
+vim.o.shiftwidth = 4
 vim.o.expandtab = true
 vim.o.cursorcolumn = false
 vim.o.ignorecase = true
@@ -44,7 +44,7 @@ vim.keymap.set({"n", "v"}, '<S-d>', ":bdelete<CR>", { silent = true, desc = "Del
 -- Add bin/ directory to vim's PATH
 vim.env.PATH = vim.fn.stdpath("config") .. "/bin:" .. vim.env.PATH
 
-vim.g.vimtex_view_method = "zathura" -- Or "sioyek" / "skim"
+vim.g.vimtex_view_method = "sioyek" -- Or "zathura" / "sioyek" / "skim"
 vim.g.vimtex_compiler_method = "latexmk"
 vim.g.vimtex_complete_enabled = 1
 
@@ -199,7 +199,6 @@ for _, lsp in ipairs(lsps) do
 	})
 end
 
-
 -- BEGIN OMNISHARP
 local pid = vim.fn.getpid()
 local omnisharp_bin = "/usr/local/bin/omnisharp-roslyn/OmniSharp.dll"
@@ -236,6 +235,21 @@ vim.lsp.enable('omnisharp')
 
 -- END OMNISHARP
 
+-- vim.lsp.config("pyright", {
+--   settings = {
+-- 	Lua = {
+-- 		workspace = {
+-- 			library = vim.api.nvim_get_runtime_file("", true),
+-- 		}
+-- 	},
+--     python = {
+--       analysis = {
+--         stubPath = vim.fn.expand("~/.local/share/python-stubs"),
+--         typeCheckingMode = "basic",
+--       }
+--     }
+--   }
+-- })
 vim.keymap.set("n", "<leader>lf", vim.lsp.buf.format)
 
 vim.cmd("colorscheme kanagawa")
@@ -400,4 +414,20 @@ require "leetcode".setup {
   },
 }
 
+-- Custom script for markdown preview in browser...
+
+vim.api.nvim_create_user_command("NvPreview", function()
+    vim.cmd("write")
+
+    local script = vim.fn.stdpath("config") .. "/scripts/markdown_preview.sh"
+    local file = vim.fn.expand("%:p")
+
+    vim.fn.jobstart({ script, file }, {
+        detach = true,
+    })
+end, {})
+
+vim.keymap.set("n", "<leader>mp", "<cmd>NvPreview<CR>", {
+    desc = "Preview Markdown",
+})
 
